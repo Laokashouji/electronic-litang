@@ -22,7 +22,7 @@
             <i class="el-icon-s-management"></i>
             <span slot="title">课程信息管理</span>
           </template>
-          <el-menu-item index="1-1"><i class="el-icon-date"></i>课程表</el-menu-item>
+          <el-menu-item index="1-1"><i class="el-icon-date"></i><router-link to>课程表</router-link></el-menu-item>
           <el-menu-item index="1-2"><i class="el-icon-files"></i>课程管理</el-menu-item>
           <el-menu-item index="1-3"><i class="el-icon-search"></i>课程查询</el-menu-item>
         </el-submenu>
