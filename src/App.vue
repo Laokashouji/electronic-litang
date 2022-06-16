@@ -23,9 +23,12 @@
               <i class="el-icon-s-management"></i>
               <span slot="title">课程信息管理</span>
             </template>
-            <router-link to="/CourseManagement"><el-menu-item index="1-1" ><i class="el-icon-date"></i>课程表</el-menu-item></router-link>
-            <el-menu-item index="1-2"><i class="el-icon-files"></i>课程管理</el-menu-item>
-            <el-menu-item index="1-3"><i class="el-icon-search"></i>课程查询</el-menu-item>
+            <router-link to="/CourseTable"><el-menu-item index="1-1" ><i class="el-icon-date"></i>
+              课程表</el-menu-item></router-link>
+            <router-link to="/CourseManagement"><el-menu-item index="1-2"><i class="el-icon-files"></i>
+              课程管理</el-menu-item></router-link>
+            <router-link to="/CourseEdit"><el-menu-item index="1-3"><i class="el-icon-edit-outline"></i>
+              课程查询</el-menu-item></router-link>
           </el-submenu>
           <el-submenu index="2">
             <template slot="title">
