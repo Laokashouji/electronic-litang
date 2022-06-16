@@ -1,6 +1,6 @@
 <template>
   <el-main style="width: 100%; height: 100%; margin-left: 50px">
-    <el-button type="success" @click="load()">刷新</el-button>
+    <el-button type="success" @click="load">刷新</el-button>
     <el-table
         :data="classList"
         border
@@ -126,42 +126,45 @@ export default {
       const st = times.startTime
       const ed = times.endTime
       let flag = 0
-      for (const item in _this.classList) {
+      for (let i = 0; i < _this.classList.length; i++) {
+        let item = _this.classList[i]
         if (flag == 2)
           break;
         const cTime = item.Course.split("~")
-        if (flag == 0)
+        if (flag == 0) {
           if (cTime[0] == st) {
             flag = 1;
-            Object.defineProperty(item, weekday, name)
+            _this.$set(_this.classList[i], weekday, name)
             continue
-          } else if (flag == 1) {
-            Object.defineProperty(item, weekday, name)
+          }
+        }
+        else if (flag == 1) {
+          _this.$set(_this.classList[i], weekday, name)
             if (cTime[1] == ed) {
               flag = 2
               continue
             }
-          }
+        }
       }
     },
     load(){
       const _this = this
-      console.log(this)
       axios.get('http://localhost:9090/CourseManagement/findAll/').then(function (resp) {
         _this.sourceData = resp.data;
-        for (const course in resp.data) {
-          for (const times in course.time) {
-            console.log(times)
+        for (let i = 0; i < _this.sourceData.length; i++) {
+          let course = _this.sourceData[i]
+          for (let j = 0; j < course.time.length; j++) {
+            let times = course.time[j]
             switch (times.weekday) {
-              case "Mon":_this.flash("one", times, course.name)
+              case "Mon":_this.fill("one", times, course.name)
                 break;
-              case "Tue":_this.flash("two", times, course.name)
+              case "Tue":_this.fill("two", times, course.name)
                 break;
-              case "Wed":_this.flash("three", times, course.name)
+              case "Wed":_this.fill("three", times, course.name)
                 break;
-              case "Thu":_this.flash("four", times, course.name)
+              case "Thu":_this.fill("four", times, course.name)
                 break;
-              case "Fri":_this.flash("five", times, course.name)
+              case "Fri":_this.fill("five", times, course.name)
                 break;
             }
           }
