@@ -27,8 +27,8 @@
               课程表</el-menu-item></router-link>
             <router-link to="/CourseManagement"><el-menu-item index="1-2"><i class="el-icon-files"></i>
               课程管理</el-menu-item></router-link>
-            <router-link to="/CourseEdit"><el-menu-item index="1-3"><i class="el-icon-edit-outline"></i>
-              课程查询</el-menu-item></router-link>
+            <router-link to="/FileManagement"><el-menu-item index="1-3"><i class="el-icon-edit-outline"></i>
+              文件管理</el-menu-item></router-link>
           </el-submenu>
           <el-submenu index="2">
             <template slot="title">
@@ -36,7 +36,8 @@
               <span slot="title">课外信息管理</span>
             </template>
             <el-menu-item index="2-1"><i class="el-icon-date"></i>活动表</el-menu-item>
-            <el-menu-item index="2-2"><i class="el-icon-files"></i>活动管理</el-menu-item>
+            <router-link to="/ActivityManagement"><el-menu-item index="2-2"><i class="el-icon-files"></i>
+              活动管理</el-menu-item></router-link>
             <el-menu-item index="2-3"><i class="el-icon-search"></i>活动查询</el-menu-item>
             <el-menu-item index="2-4"><i class="el-icon-alarm-clock"></i>活动提醒</el-menu-item>
           </el-submenu>
@@ -60,6 +61,7 @@
           </div>
           <div style="flex: 1">
             2022-{{m}}-{{d}}-{{h}}:00:00
+            <el-button @click="speedUp"></el-button>
           </div>
           <el-dropdown style="width: 70px; cursor: pointer">
             <span>何同学</span>

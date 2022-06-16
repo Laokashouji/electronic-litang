@@ -1,6 +1,12 @@
 <template>
   <el-main style="width: 100%; height: 100%; margin-left: 50px">
-    <el-button type="success" @click="load">刷新</el-button>
+<!--    <el-button type="success" @click="load">刷新</el-button>-->
+    <div style="margin-bottom: 30px">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/CourseTable' }">课程管理</el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
     <el-table
         :data="classList"
         border
@@ -85,7 +91,7 @@ export default {
           five: "",
         },
         {
-          Course: "14:45~15:50",
+          Course: "14:45~15:30",
           one: "",
           two: "",
           three: "",
@@ -119,6 +125,9 @@ export default {
       ],
       sourceData:[],
     }
+  },
+  mounted() {
+    this.load()
   },
   methods:{
     fill(weekday, times, name){

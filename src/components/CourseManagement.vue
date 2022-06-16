@@ -163,6 +163,8 @@ export default {
           {required: false, message: '请输入群号', trigger: 'blur'}
         ],
       },
+      CourseName: "",
+      TeacherName: "",
     }
   },
   created() {

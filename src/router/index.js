@@ -4,6 +4,8 @@ import Home from "@/components/Home";
 import CourseManagement from "@/components/CourseManagement";
 import CourseEdit from "@/components/CourseEdit";
 import CourseTable from "@/components/CourseTable";
+import ActivityManagement from "@/components/ActivityManagement";
+import FileManagement from "@/components/FileManagement";
 Vue.use(VueRouter)
 
 const routes = [
@@ -26,6 +28,16 @@ const routes = [
     path: '/CourseTable',
     name: 'CourseTable',
     component: CourseTable
+  },
+  {
+    path: '/ActivityManagement',
+    name: 'ActivityManagement',
+    component: ActivityManagement
+  },
+  {
+    path: '/FileManagement',
+    name: 'FileManagement',
+    component: FileManagement
   },
 ]
 

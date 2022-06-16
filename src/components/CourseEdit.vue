@@ -62,7 +62,7 @@
           placeholder="选择时间范围">
       </el-time-picker>
     </el-form-item>
-    <el-form-item label="上课地点" prop="examPlace">
+    <el-form-item label="考试地点" prop="examPlace">
       <el-select v-model="ruleForm.examPlace" placeholder="请选择上课地点">
         <el-option label="S105" value="S105"></el-option>
         <el-option label="S205" value="S205"></el-option>
