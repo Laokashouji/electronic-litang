@@ -94,7 +94,7 @@ export default {
     },
     download(row){
       console.log(row)
-      row.url.lastIndexOf("/";)
+      row.url.lastIndexOf("/")
       axios.get('http://localhost:9090/file/download/' + _this.FileName)
     }
 
