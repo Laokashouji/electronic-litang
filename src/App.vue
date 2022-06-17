@@ -35,10 +35,8 @@
               <i class="el-icon-menu"></i>
               <span slot="title">课外信息管理</span>
             </template>
-            <el-menu-item index="2-1"><i class="el-icon-date"></i>活动表</el-menu-item>
             <router-link to="/ActivityManagement"><el-menu-item index="2-2"><i class="el-icon-files"></i>
               活动管理</el-menu-item></router-link>
-            <el-menu-item index="2-3"><i class="el-icon-search"></i>活动查询</el-menu-item>
             <el-menu-item index="2-4"><i class="el-icon-alarm-clock"></i>活动提醒</el-menu-item>
           </el-submenu>
           <el-menu-item index="3">

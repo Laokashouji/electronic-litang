@@ -149,6 +149,7 @@ export default {
     findAll() {
       const _this = this
       axios.get('http://localhost:9090/ActivityManagement/findAll/').then(function (resp) {
+        console.log(resp.data)
         _this.totalNum = resp.data.length;
         _this.sourceData = resp.data;
         _this.handleCurrentChange(1);
