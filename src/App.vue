@@ -37,7 +37,7 @@
             </template>
             <router-link to="/ActivityManagement"><el-menu-item index="2-2"><i class="el-icon-files"></i>
               活动管理</el-menu-item></router-link>
-            <router-link to="/ActivityManagement"><el-menu-item index="2-4"><i class="el-icon-alarm-clock"></i>
+            <router-link to="/Clock"><el-menu-item index="2-4"><i class="el-icon-alarm-clock"></i>
               活动提醒</el-menu-item></router-link>
           </el-submenu>
           <el-menu-item index="3">

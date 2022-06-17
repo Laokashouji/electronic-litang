@@ -12,7 +12,8 @@
     </div>
 
     <div style="margin: 10px 0">
-      <el-button type="primary" @click="dialogFormVisible = true">新增 <i class="el-icon-circle-plus-outline"></i></el-button>
+      <el-button type="primary" @click="dialogFormVisible = true">新增 <i class="el-icon-circle-plus-outline"></i>
+      </el-button>
     </div>
 
     <el-dialog title="新增闹钟" :visible.sync="dialogFormVisible">
@@ -48,14 +49,11 @@
             <el-option label="周六" value="6"></el-option>
             <el-option label="周日" value="7"></el-option>
           </el-select>
-          <el-time-picker
-              is-range
-              v-model=ruleForm.time.rowTime
-              range-separator="至"
-              start-placeholder="开始时间"
-              end-placeholder="结束时间"
-              placeholder="选择时间范围">
-          </el-time-picker>
+          <template>
+            <el-time-picker
+                v-model="ruleForm.time.rowTime"
+                placeholder="任意时间点">
+            </el-time-picker>
         </el-form-item>
 
         <el-form-item>
@@ -69,7 +67,7 @@
 
       <el-table-column prop="name" label="闹钟名称"></el-table-column>
       <el-table-column prop="time.dTime" label="闹钟时间"></el-table-column>
-      <el-table-column prop="type" label="闹钟类型" ></el-table-column>
+      <el-table-column prop="type" label="闹钟类型"></el-table-column>
 
     </el-table>
     <div style="padding: 10px 0">
@@ -160,7 +158,7 @@ export default {
         }
       });
     },
-    judge(){
+    judge() {
       const s = this.sourceData[this.sourceData.length - 1]
       const t1 = s.time.dTime.split(",")
       const t2 = t1[1].split("~")
@@ -170,7 +168,7 @@ export default {
         const t = this.sourceData[i].time.dTime.split(",")
         const tt = t[1].split("~")
         // console.log(t2[0] < tt[0])
-        if(t[0] != t1[0] || t2[1] < tt[0] || t2[0] > tt[1])
+        if (t[0] != t1[0] || t2[1] < tt[0] || t2[0] > tt[1])
           continue
         else {
           // console.log("t2[0] = " + t2[0])
