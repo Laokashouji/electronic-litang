@@ -93,9 +93,31 @@ export default {
           })
     },
     download(row){
-      console.log(row)
-      row.url.lastIndexOf("/")
-      axios.get('http://localhost:9090/file/download/' + _this.FileName)
+      const uName = row.url.substring(row.url.lastIndexOf("/") + 1)
+      axios({
+        url:'http://localhost:9090/file/download/'+ uName,
+        method:'get',
+        responseType: 'arraybuffer',
+      }).then(
+          (res) => {
+            console.log(res)
+            //使用Blob对象将后端返回的Arraybuffer格式得数据转成blob类型的数据 window.URL.createObjectURL(blob)可以把一个blob转成blobURL，用作图片显示，文件下载（不能再服务器上存储，只能在浏览器使用）
+            var b = new Blob([res.data], { type: 'application/vnd.ms-excel' });
+            // 使用URL对象将blob类型的数据生成一个在线下载的链接
+            var url = URL.createObjectURL(b);
+            // 然后我们使用a标签进行下载
+            var link = document.createElement('a');
+
+            // 设置导出的文件名
+            link.download = row.name + "." + row.type;
+            link.href = url;
+            // 点击获取文件
+            link.click();
+          },
+          (err) => {
+            console.log(err);
+          }
+      )
     }
 
   }
