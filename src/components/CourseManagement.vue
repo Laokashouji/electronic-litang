@@ -19,8 +19,6 @@
     <div style="margin: 10px 0">
       <el-button type="primary" @click="dialogFormVisible = true">新增 <i class="el-icon-circle-plus-outline"></i>
       </el-button>
-      <el-button type="primary">导入 <i class="el-icon-bottom"></i></el-button>
-      <el-button type="primary">导出 <i class="el-icon-top"></i></el-button>
     </div>
 
     <el-dialog title="新增课程" :visible.sync="dialogFormVisible">
@@ -96,7 +94,7 @@
               <span>{{ props.row.group }}</span>
             </el-form-item>
             <el-form-item label="考试时间">
-              <span>{{ props.row.examTime.weekday == null ? "无": props.row.examTime }}</span>
+              <span>{{ props.row.examTime.formatTime+" "+props.row.examTime.startTime+"~"+props.row.examTime.endTime}}</span>
             </el-form-item>
             <el-form-item label="考试地点">
               <span>{{ props.row.examPlace == "" ? "无" : props.row.examPlace}}</span>

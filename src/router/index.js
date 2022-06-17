@@ -6,6 +6,7 @@ import CourseEdit from "@/components/CourseEdit";
 import CourseTable from "@/components/CourseTable";
 import ActivityManagement from "@/components/ActivityManagement";
 import FileManagement from "@/components/FileManagement";
+import Clock from "@/components/Clock";
 Vue.use(VueRouter)
 
 const routes = [
@@ -39,6 +40,11 @@ const routes = [
     name: 'FileManagement',
     component: FileManagement
   },
+  {
+    path: '/Clock',
+    name: 'Clock',
+    component: Clock
+  }
 ]
 
 const router = new VueRouter({

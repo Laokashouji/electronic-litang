@@ -11,7 +11,7 @@
 
   <div style="margin: 10px 0">
     <el-button type="primary" @click="findAll" style="margin-right: 20px">显示全部</el-button>
-    <el-input style="width: 200px" placeholder="请输入资料名称" v-model="CourseName" suffix-icon="el-icon-search"></el-input>
+    <el-input style="width: 200px" placeholder="请输入资料名称" v-model="FileName" suffix-icon="el-icon-search"></el-input>
     <el-button class="ml-5" type="primary" @click="searchByName">搜索</el-button>
   </div>
 
@@ -19,6 +19,12 @@
     <el-table-column prop="name" label="资料名称"></el-table-column>
     <el-table-column prop="size" label="资料大小"></el-table-column>
     <el-table-column prop="type" label="资料类型"></el-table-column>
+    <el-table-column label="操作" width="200" align="center">
+      <template slot-scope="scope">
+        <el-button type="success" @click="download(scope.row)">下载 <i class="el-icon-download"></i></el-button>
+        <!--          <el-button type="danger">删除 <i class="el-icon-rem ove-outline"></i></el-button>-->
+      </template>
+    </el-table-column>
   </el-table>
 
   <div style="padding: 10px 0">
@@ -41,11 +47,10 @@ export default {
     return {
       tableData: [],
       sourceData: [],
-      pageSize: 5,
+      pageSize: 10,
       currentPage: 1,
       totalNum: 100,
-      CourseName: "",
-      TeacherName: "",
+      FileName: "",
     };
   },
   created() {
@@ -79,7 +84,8 @@ export default {
     },
     searchByName() {
       const _this = this
-      axios.get('http://localhost:9090/CourseManagement/searchByCourseName/' + _this.CourseName)
+
+      axios.get('http://localhost:9090/file/searchByName/' + _this.FileName)
           .then(function (resp) {
             _this.totalNum = resp.data.length;
             _this.sourceData = resp.data;

@@ -37,7 +37,8 @@
             </template>
             <router-link to="/ActivityManagement"><el-menu-item index="2-2"><i class="el-icon-files"></i>
               活动管理</el-menu-item></router-link>
-            <el-menu-item index="2-4"><i class="el-icon-alarm-clock"></i>活动提醒</el-menu-item>
+            <router-link to="/ActivityManagement"><el-menu-item index="2-4"><i class="el-icon-alarm-clock"></i>
+              活动提醒</el-menu-item></router-link>
           </el-submenu>
           <el-menu-item index="3">
             <i class="el-icon-map-location"></i>
@@ -59,7 +60,7 @@
           </div>
           <div style="flex: 1">
             2022-{{m}}-{{d}}-{{h}}:00:00
-<!--            <el-button @click="speedUp"></el-button>-->
+            <el-button @click="speedUp">快进</el-button>
           </div>
           <el-dropdown style="width: 70px; cursor: pointer">
             <span>何同学</span>
@@ -138,7 +139,9 @@ export default {
       times = 0
       return times
     },
-
+    speedUp(){
+      this.times = 10
+    }
   }
 }
 </script>

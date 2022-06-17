@@ -3,73 +3,51 @@
     <div style="margin-bottom: 30px">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item :to="{ path: '/ActivityManagement' }">活动管理</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/Clock' }">活动提醒</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
 
     <div style="margin: 10px 0">
       <el-button type="primary" @click="findAll" style="margin-right: 20px">显示全部</el-button>
-      <el-input style="width: 200px" placeholder="请输入活动名称" v-model="ActivityName"
-                suffix-icon="el-icon-search"></el-input>
-      <el-button class="ml-5" type="primary" @click="searchByActivityName">搜索</el-button>
-      <el-input style="width: 200px" placeholder="请输入活动标签" v-model="ActivityTag"
-                suffix-icon="el-icon-message"></el-input>
-      <el-button class="ml-5" type="primary" @click="searchByActivityTag">搜索</el-button>
     </div>
 
     <div style="margin: 10px 0">
       <el-button type="primary" @click="dialogFormVisible = true">新增 <i class="el-icon-circle-plus-outline"></i></el-button>
-        <el-button type="primary" @click="judge">判断冲突 <i class="el-icon-circle-plus-outline"></i></el-button>
     </div>
 
-    <el-dialog title="新增活动" :visible.sync="dialogFormVisible">
+    <el-dialog title="新增闹钟" :visible.sync="dialogFormVisible">
 
       <el-form :model="ruleForm" ref="ruleForm" label-width="100px">
-        <el-form-item label="活动名称" prop="name" required>
+        <el-form-item label="闹钟名称" prop="name" required>
           <el-input v-model="ruleForm.name"></el-input>
         </el-form-item>
 
-        <el-form-item label="活动地点" prop="place">
-          <el-select v-model="ruleForm.place" placeholder="请选择活动地点">
-            <el-option label="教学楼" value="教学楼"></el-option>
-            <el-option label="宿舍" value="宿舍"></el-option>
-            <el-option label="二维码广场" value="二维码广场"></el-option>
-            <el-option label="图书馆" value="图书馆"></el-option>
-            <el-option label="操场" value="操场"></el-option>
-            <el-option label="食堂" value="食堂"></el-option>
-            <el-option label="校外" value="校外"></el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="活动类型">
+        <el-form-item label="闹钟类型">
           <el-radio-group v-model="ruleForm.type">
-            <el-radio label="个人活动"></el-radio>
-            <el-radio label="集体活动"></el-radio>
+            <el-radio label="1">单次</el-radio>
+            <el-radio label="2">每天一次</el-radio>
+            <el-radio label="3">每周一次</el-radio>
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item label="活动标签" prop="tag">
-          <el-select v-model="ruleForm.tag" placeholder="请选择活动标签">
-            <el-option v-if="ruleForm.type == '个人活动'" label="自习" value="自习"></el-option>
-            <el-option v-if="ruleForm.type == '个人活动'" label="锻炼" value="锻炼"></el-option>
-            <el-option v-if="ruleForm.type == '个人活动'" label="外出" value="外出"></el-option>
-            <el-option v-if="ruleForm.type == '个人活动'" label="其他" value="其他"></el-option>
-            <el-option v-if="ruleForm.type == '集体活动'" label="班会" value="班会"></el-option>
-            <el-option v-if="ruleForm.type == '集体活动'" label="小组作业" value="小组作业"></el-option>
-            <el-option v-if="ruleForm.type == '集体活动'" label="创新创业" value="创新创业"></el-option>
-            <el-option v-if="ruleForm.type == '集体活动'" label="聚餐" value="聚餐"></el-option>
-            <el-option v-if="ruleForm.type == '集体活动'" label="其他" value="其他"></el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="活动时间" prop="time">
+        <el-form-item label="提醒时间" prop="time">
           <el-date-picker
+              v-if="ruleForm.type == 1"
               v-model="ruleForm.time.formatTime"
               type="date"
               placeholder="选择日期"
               format="yyyy 年 MM 月 dd 日"
               value-format="yyyy-MM-dd">
           </el-date-picker>
+          <el-select v-if="ruleForm.type == 2" v-model="ruleForm.time.weekday" placeholder="请选择星期">
+            <el-option label="周一" value="1"></el-option>
+            <el-option label="周二" value="2"></el-option>
+            <el-option label="周三" value="3"></el-option>
+            <el-option label="周四" value="4"></el-option>
+            <el-option label="周五" value="5"></el-option>
+            <el-option label="周六" value="6"></el-option>
+            <el-option label="周日" value="7"></el-option>
+          </el-select>
           <el-time-picker
               is-range
               v-model=ruleForm.time.rowTime
@@ -89,18 +67,9 @@
 
     <el-table :data="tableData" border stripe>
 
-      <el-table-column prop="name" label="活动名称"></el-table-column>
-      <el-table-column prop="place" label="活动地点"></el-table-column>
-      <el-table-column prop="time.dTime" label="活动时间"  sortable></el-table-column>
-      <el-table-column prop="type" label="活动类型" :filters="[{ text: '个人活动', value: '个人活动' }, { text: '集体活动', value: '集体活动' }]"
-                       :filter-method="filterType" filter-placement="bottom-end">
-        <template slot-scope="scope">
-          <el-tag
-              :type="scope.row.type === '个人活动' ? 'primary' : 'success'"
-              disable-transitions>{{scope.row.type}}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="tag" label="活动标签"></el-table-column>
+      <el-table-column prop="name" label="闹钟名称"></el-table-column>
+      <el-table-column prop="time.dTime" label="闹钟时间"></el-table-column>
+      <el-table-column prop="type" label="闹钟类型" ></el-table-column>
 
     </el-table>
     <div style="padding: 10px 0">
@@ -117,7 +86,7 @@
 
 <script>
 export default {
-  name: "ActivityManagement",
+  name: "Clock",
   data() {
     return {
       tableData: [],
@@ -128,18 +97,14 @@ export default {
       dialogFormVisible: false,
       ruleForm: {
         name: '',
-        place: '',
         time: {},
-        tag: '',
         type: '',
       },
-      ActivityName: "",
-      ActivityTag: "",
     }
   },
   created() {
     const _this = this
-    axios.get('http://localhost:9090/ActivityManagement/findAll/').then(function (resp) {
+    axios.get('http://localhost:9090/Clock/findAll/').then(function (resp) {
       _this.totalNum = resp.data.length;
       _this.sourceData = resp.data;
       _this.handleCurrentChange(1);
