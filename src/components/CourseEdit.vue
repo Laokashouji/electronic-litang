@@ -3,14 +3,14 @@
     <el-form-item label="课程名称" prop="name" required>
       <el-input class="input-button" v-model="ruleForm.name"></el-input>
     </el-form-item>
-    <el-form-item label="授课教师" prop="teacherName">
+    <el-form-item label="授课教师" prop="teacher">
       <el-input class="input-button" v-model="ruleForm.teacher"></el-input>
     </el-form-item>
     <el-form-item
         v-for="(time, index) in ruleForm.time"
         :label="'上课时间' + index"
         :key="index"
-        :prop="'times.' + index + '.value'"
+        :prop="'time.' + index + '.rowTime'"
         :rules="{required: true, message: '上课时间不能为空', trigger: 'blur'}">
       <el-select v-model="time.weekday" placeholder="请选择星期">
         <el-option label="周一" value="Mon"></el-option>
@@ -39,7 +39,7 @@
         <el-option label="N305" value="N305"></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="课程群" prop="groupNum">
+    <el-form-item label="课程群" prop="group">
       <el-input class="input-button" v-model="ruleForm.group"></el-input>
     </el-form-item>
     <el-form-item label="当前进度" prop="progress">
@@ -91,7 +91,7 @@ export default {
         name: [
           {required: true, message: '请输入课程名称', trigger: 'blur'},
         ],
-        teacherName: [
+        teacher: [
           {required: true, message: '请输入教师名称', trigger: 'blur'},
         ],
         place: [
@@ -115,14 +115,16 @@ export default {
       const _this = this
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.post('http://localhost:9090/CourseManagement/addCourse', _this.ruleForm)
+          console.log("@@@")
+          axios.post('http://localhost:9090/CourseManagement/editCourse', _this.ruleForm)
               .then(function (resp) {
                 if (resp.data == "success") {
-                  _this.dialogFormVisible = false
-                  _this.findAll()
-                  alert("添加成功")
+                  alert("修改成功")
                 }
               })
+          this.$router.push({
+            path: "/CourseManagement",
+          })
         } else {
           alert('error submit!!');
           return false;

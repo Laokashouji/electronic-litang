@@ -1,18 +1,36 @@
 <template>
 <el-main>
   <el-upload
-      class="upload-demo"
-      action="https://jsonplaceholder.typicode.com/posts/"
-      :on-preview="handlePreview"
+      action="http://localhost:9090/file/upload"
+      :show-file-list="false"
       :on-remove="handleRemove"
       :before-remove="beforeRemove"
-      multiple
-      :limit="3"
-      :on-exceed="handleExceed"
-      :file-list="fileList">
+      :on-success="handleSuccess">
     <el-button size="small" type="primary">点击上传</el-button>
-    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
   </el-upload>
+
+  <div style="margin: 10px 0">
+    <el-button type="primary" @click="findAll" style="margin-right: 20px">显示全部</el-button>
+    <el-input style="width: 200px" placeholder="请输入资料名称" v-model="CourseName" suffix-icon="el-icon-search"></el-input>
+    <el-button class="ml-5" type="primary" @click="searchByName">搜索</el-button>
+  </div>
+
+  <el-table :data="tableData" border stripe>
+    <el-table-column prop="name" label="资料名称"></el-table-column>
+    <el-table-column prop="size" label="资料大小"></el-table-column>
+    <el-table-column prop="type" label="资料类型"></el-table-column>
+  </el-table>
+
+  <div style="padding: 10px 0">
+    <el-pagination
+        @current-change="handleCurrentChange"
+        :page-size=pageSize
+        :current-page=currentPage
+        layout="total, pager"
+        :total=totalNum>
+    </el-pagination>
+  </div>
+
 </el-main>
 </template>
 
@@ -21,22 +39,54 @@ export default {
   name: "FileManagement",
   data() {
     return {
-      fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
+      tableData: [],
+      sourceData: [],
+      pageSize: 5,
+      currentPage: 1,
+      totalNum: 100,
+      CourseName: "",
+      TeacherName: "",
     };
+  },
+  created() {
+    const _this = this
+    axios.get('http://localhost:9090/file/findAll').then(function (resp) {
+      _this.totalNum = resp.data.length;
+      _this.sourceData = resp.data;
+      _this.handleCurrentChange(1);
+    })
   },
   methods: {
     handleRemove(file, fileList) {
       console.log(file, fileList);
     },
-    handlePreview(file) {
-      console.log(file);
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
-    },
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${ file.name }？`);
-    }
+    },
+    handleSuccess(file, fileList){
+      this.findAll()
+    },
+    findAll() {
+      const _this = this
+      axios.get('http://localhost:9090/file/findAll/').then(function (resp) {
+        _this.totalNum = resp.data.length;
+        _this.sourceData = resp.data;
+        _this.handleCurrentChange(1);
+      })
+    },
+    handleCurrentChange(pageNum) {
+      this.tableData = this.sourceData.slice((pageNum - 1) * this.pageSize, pageNum * this.pageSize)
+    },
+    searchByName() {
+      const _this = this
+      axios.get('http://localhost:9090/CourseManagement/searchByCourseName/' + _this.CourseName)
+          .then(function (resp) {
+            _this.totalNum = resp.data.length;
+            _this.sourceData = resp.data;
+            _this.handleCurrentChange(1);
+          })
+    },
+
   }
 }
 </script>

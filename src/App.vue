@@ -61,7 +61,7 @@
           </div>
           <div style="flex: 1">
             2022-{{m}}-{{d}}-{{h}}:00:00
-            <el-button @click="speedUp"></el-button>
+<!--            <el-button @click="speedUp"></el-button>-->
           </div>
           <el-dropdown style="width: 70px; cursor: pointer">
             <span>何同学</span>

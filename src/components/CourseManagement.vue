@@ -112,7 +112,7 @@
       <el-table-column label="操作" width="200" align="center">
         <template slot-scope="scope">
           <el-button type="success" @click="edit(scope.row)">编辑 <i class="el-icon-edit"></i></el-button>
-          <el-button type="danger">删除 <i class="el-icon-remove-outline"></i></el-button>
+<!--          <el-button type="danger">删除 <i class="el-icon-remove-outline"></i></el-button>-->
         </template>
       </el-table-column>
     </el-table>
