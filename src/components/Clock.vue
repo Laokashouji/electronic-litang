@@ -49,11 +49,11 @@
             <el-option label="周六" value="6"></el-option>
             <el-option label="周日" value="7"></el-option>
           </el-select>
-          <template>
-            <el-time-picker
-                v-model="ruleForm.time.rowTime"
-                placeholder="任意时间点">
-            </el-time-picker>
+          <el-time-picker
+              v-model="ruleForm.time.rowTime"
+              :picker-options="{selectableRange: '18:30:00 - 20:30:00'}"
+              placeholder="任意时间点">
+          </el-time-picker>
         </el-form-item>
 
         <el-form-item>
