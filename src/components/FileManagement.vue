@@ -92,6 +92,11 @@ export default {
             _this.handleCurrentChange(1);
           })
     },
+    download(row){
+      console.log(row)
+      row.url.lastIndexOf("/";)
+      axios.get('http://localhost:9090/file/download/' + _this.FileName)
+    }
 
   }
 }
