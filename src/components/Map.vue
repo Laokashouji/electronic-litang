@@ -14,8 +14,10 @@
     </el-radio-group>
     <el-input style="width: 200px" placeholder="请输入目的地点" v-model="target"
               suffix-icon="el-icon-message"></el-input>
-    <el-button class="ml-5" type="primary" @click="search">搜索</el-button>
     </div>
+    <el-button class="ml-5" type="primary" @click="search1">导航方式1</el-button>
+    <el-button class="ml-5" type="primary" @click="search2">导航方式2</el-button>
+    <el-button class="ml-5" type="primary" @click="search3">导航方式3</el-button>
   </el-main>
 </template>
 
@@ -30,6 +32,17 @@ export default {
       schoolTarget:'',
     }
   },
+  methods:{
+    search1(){
+      const _this = this
+      axios.get('http://localhost:9090/Map/findBy/').then(function (resp) {
+        console.log(resp.data)
+        _this.totalNum = resp.data.length;
+        _this.sourceData = resp.data;
+        _this.handleCurrentChange(1);
+      })
+    },
+  }
 }
 </script>
 
