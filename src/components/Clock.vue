@@ -8,10 +8,6 @@
     </div>
 
     <div style="margin: 10px 0">
-      <el-button type="primary" @click="findAll" style="margin-right: 20px">显示全部</el-button>
-    </div>
-
-    <div style="margin: 10px 0">
       <el-button type="primary" @click="dialogFormVisible = true">新增 <i class="el-icon-circle-plus-outline"></i>
       </el-button>
     </div>
@@ -26,8 +22,8 @@
         <el-form-item label="闹钟类型">
           <el-radio-group v-model="ruleForm.type">
             <el-radio label="1">单次</el-radio>
-            <el-radio label="2">每天一次</el-radio>
-            <el-radio label="3">每周一次</el-radio>
+            <el-radio label="2">每周一次</el-radio>
+            <el-radio label="3">每天一次</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -35,10 +31,9 @@
           <el-date-picker
               v-if="ruleForm.type == 1"
               v-model="ruleForm.time.formatTime"
-              type="date"
+              type="datetime"
               placeholder="选择日期"
-              format="yyyy 年 MM 月 dd 日"
-              value-format="yyyy-MM-dd">
+              value-format="yyyy-MM-dd HH:mm:ss">
           </el-date-picker>
           <el-select v-if="ruleForm.type == 2" v-model="ruleForm.time.weekday" placeholder="请选择星期">
             <el-option label="周一" value="1"></el-option>
@@ -50,8 +45,9 @@
             <el-option label="周日" value="7"></el-option>
           </el-select>
           <el-time-picker
+              v-if="ruleForm.type != 1"
               v-model="ruleForm.time.rowTime"
-              :picker-options="{selectableRange: '18:30:00 - 20:30:00'}"
+              value-format="HH:mm:ss"
               placeholder="任意时间点">
           </el-time-picker>
         </el-form-item>
@@ -63,135 +59,117 @@
       </el-form>
     </el-dialog>
 
+    <div style="flex: 1">
+      {{ time.getFullYear() }}-{{ time.getMonth() + 1}}-{{ time.getDate() }}
+      {{ time.getHours() }}:{{ time.getMinutes() }}:{{ time.getSeconds() }}
+      <el-button @click="speedUp">快进</el-button>
+    </div>
+
     <el-table :data="tableData" border stripe>
 
       <el-table-column prop="name" label="闹钟名称"></el-table-column>
-      <el-table-column prop="time.dTime" label="闹钟时间"></el-table-column>
-      <el-table-column prop="type" label="闹钟类型"></el-table-column>
+      <el-table-column prop="time.formatTime" label="闹钟时间"></el-table-column>
+      <el-table-column prop="type" label="闹钟类型(1,2,3分别表示单次、每周、每天）"></el-table-column>
 
     </el-table>
-    <div style="padding: 10px 0">
-      <el-pagination
-          @current-change="handleCurrentChange"
-          :page-size=pageSize
-          :current-page=currentPage
-          layout="total, pager"
-          :total=totalNum>
-      </el-pagination>
-    </div>
+
   </el-main>
 </template>
 
 <script>
+
+import bus from "@/utils/bus";
+
 export default {
   name: "Clock",
   data() {
     return {
       tableData: [],
-      sourceData: [],
-      pageSize: 10,
-      currentPage: 1,
-      totalNum: 100,
       dialogFormVisible: false,
       ruleForm: {
         name: '',
         time: {},
         type: '',
       },
+      time: new Date(2022, 6, 1, 0),
     }
   },
   created() {
-    const _this = this
-    axios.get('http://localhost:9090/Clock/findAll/').then(function (resp) {
-      _this.totalNum = resp.data.length;
-      _this.sourceData = resp.data;
-      _this.handleCurrentChange(1);
+    bus.$on('send', (data) => {
+      this.react(data)
     })
   },
+  mounted() {
+    this.timer = setInterval(() => {
+      this.times = this.countTime(this.times);
+    }, 1000)
+  },
+  beforeDestroy() {
+    bus.$off('send');
+    if (this.timer) {
+      clearInterval(this.timer)
+    }
+  },
   methods: {
-    findAll() {
-      const _this = this
-      axios.get('http://localhost:9090/ActivityManagement/findAll/').then(function (resp) {
-        console.log(resp.data)
-        _this.totalNum = resp.data.length;
-        _this.sourceData = resp.data;
-        _this.handleCurrentChange(1);
-      })
-    },
-    handleCurrentChange(pageNum) {
-      this.tableData = this.sourceData.slice((pageNum - 1) * this.pageSize, pageNum * this.pageSize)
-      this.loadTime()
-    },
-    searchByActivityName() {
-      const _this = this
-      axios.get('http://localhost:9090/ActivityManagement/searchByName/' + _this.ActivityName)
-          .then(function (resp) {
-            _this.totalNum = resp.data.length;
-            _this.sourceData = resp.data;
-            _this.handleCurrentChange(1);
-          })
-    },
-    searchByActivityTag() {
-      const _this = this
-      axios.get('http://localhost:9090/ActivityManagement/searchByTag/' + _this.ActivityTag)
-          .then(function (resp) {
-            _this.totalNum = resp.data.length;
-            _this.sourceData = resp.data;
-            _this.handleCurrentChange(1);
-          })
+    react(data) {
+      for (let i = 0; i < this.tableData.length; i++) {
+
+        if (this.tableData[i].type == 1) {
+          let str1 = this.tableData[i].time.formatTime
+          str1 = str1.replace(/-/g, "/");
+          var d = new Date(str1);
+          console.log(Math.abs(d.getTime() - data.getTime()))
+          if (Math.abs(d.getTime() - data.getTime()) < 3600 * 1000) {
+            alert("闹钟" + this.tableData[i].name + "响了")
+            this.tableData[i].type = 0
+          }
+        } else if (this.tableData[i].type == 2) {
+          if (data.getDay() == this.tableData[i].time.weekday % 8 && data.getHours() == this.tableData[i].time.rowTime.slice(0, 2)) {
+            alert("闹钟" + this.tableData[i].name + "响了")
+          }
+        } else if (this.tableData[i].type == 3) {
+          if (data.getHours() == this.tableData[i].time.rowTime.slice(0, 2)) {
+            alert("闹钟" + this.tableData[i].name + "响了")
+          }
+        }
+      }
     },
     submitForm(formName) {
       const _this = this
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          axios.post('http://localhost:9090/ActivityManagement/addActivity', _this.ruleForm)
-              .then(function (resp) {
-                if (resp.data == "success") {
-                  _this.dialogFormVisible = false
-                  _this.findAll()
-                  alert("添加成功")
-                }
-              })
-        } else {
-          alert('error submit!!');
-          return false;
+          if (_this.ruleForm.type == 2) {
+            _this.ruleForm.time.formatTime = _this.ruleForm.time.weekday + " " + _this.ruleForm.time.rowTime
+          } else if (_this.ruleForm.type == 3) _this.ruleForm.time.formatTime = _this.ruleForm.time.rowTime
+          _this.tableData.push({
+            name: _this.ruleForm.name,
+            time: {
+              formatTime: _this.ruleForm.time.formatTime,
+              weekday: _this.ruleForm.time.weekday,
+              rowTime: _this.ruleForm.time.rowTime
+            },
+            type: _this.ruleForm.type
+          })
         }
-      });
-    },
-    judge() {
-      const s = this.sourceData[this.sourceData.length - 1]
-      const t1 = s.time.dTime.split(",")
-      const t2 = t1[1].split("~")
-      // console.log(s)
-      for (let i = 0; i < this.sourceData.length - 1; i++) {
-
-        const t = this.sourceData[i].time.dTime.split(",")
-        const tt = t[1].split("~")
-        // console.log(t2[0] < tt[0])
-        if (t[0] != t1[0] || t2[1] < tt[0] || t2[0] > tt[1])
-          continue
-        else {
-          // console.log("t2[0] = " + t2[0])
-          // console.log("tt[0] = " + tt[0])
-          // console.log("t2[1] = " + t2[1])
-          // console.log("tt[1] = " + tt[1])
-          alert("存在冲突")
-          return false
-        }
-      }
+      })
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-    loadTime() {
-
-      for (let i = 0; i < this.tableData.length; i++) {
-        let t = this.tableData[i].time;
-        this.tableData[i].time.dTime = t.formatTime + ',' + t.startTime + '~' + t.endTime;
+    countTime(times) {
+      if (times != 10) {
+        times++
+        return times
       }
+      times = 0
+      this.speedUp()
+      return times
     },
-    filterType(value, row) {
-      return row.type === value;
+    speedUp() {
+      let t = this.time.getTime()
+      t += 1000 * 3600
+      this.time = new Date(t)
+      this.react(this.time)
     },
   }
 }

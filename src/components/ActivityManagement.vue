@@ -208,10 +208,6 @@ export default {
         if(t[0] != t1[0] || t2[1] < tt[0] || t2[0] > tt[1])
           continue
         else {
-          // console.log("t2[0] = " + t2[0])
-          // console.log("tt[0] = " + tt[0])
-          // console.log("t2[1] = " + t2[1])
-          // console.log("tt[1] = " + tt[1])
           alert("存在冲突")
           return false
         }
@@ -221,7 +217,6 @@ export default {
       this.$refs[formName].resetFields();
     },
     loadTime() {
-
       for (let i = 0; i < this.tableData.length; i++) {
         let t = this.tableData[i].time;
         this.tableData[i].time.dTime = t.formatTime + ',' + t.startTime + '~' + t.endTime;

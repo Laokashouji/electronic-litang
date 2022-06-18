@@ -16,29 +16,46 @@
             <img src="~@/assets/bupt-removebg-preview.png" alt="" v-show="!logoTextShow"
                  style="position: relative; top: 15px;" width="55"/>
             <br/>
-            <b style="color: white" v-show="logoTextShow"><router-link to="/">电子理塘后台管理系统</router-link></b>
+            <b style="color: white" v-show="logoTextShow">
+              <router-link to="/">电子理塘后台管理系统</router-link>
+            </b>
           </div>
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-s-management"></i>
               <span slot="title">课程信息管理</span>
             </template>
-            <router-link to="/CourseTable"><el-menu-item index="1-1" ><i class="el-icon-date"></i>
-              课程表</el-menu-item></router-link>
-            <router-link to="/CourseManagement"><el-menu-item index="1-2"><i class="el-icon-files"></i>
-              课程管理</el-menu-item></router-link>
-            <router-link to="/FileManagement"><el-menu-item index="1-3"><i class="el-icon-edit-outline"></i>
-              文件管理</el-menu-item></router-link>
+            <router-link to="/CourseTable">
+              <el-menu-item index="1-1"><i class="el-icon-date"></i>
+                课程表
+              </el-menu-item>
+            </router-link>
+            <router-link to="/CourseManagement">
+              <el-menu-item index="1-2"><i class="el-icon-files"></i>
+                课程管理
+              </el-menu-item>
+            </router-link>
+            <router-link to="/FileManagement">
+              <el-menu-item index="1-3"><i class="el-icon-edit-outline"></i>
+                文件管理
+              </el-menu-item>
+            </router-link>
           </el-submenu>
           <el-submenu index="2">
             <template slot="title">
               <i class="el-icon-menu"></i>
               <span slot="title">课外信息管理</span>
             </template>
-            <router-link to="/ActivityManagement"><el-menu-item index="2-2"><i class="el-icon-files"></i>
-              活动管理</el-menu-item></router-link>
-            <router-link to="/Clock"><el-menu-item index="2-4"><i class="el-icon-alarm-clock"></i>
-              活动提醒</el-menu-item></router-link>
+            <router-link to="/ActivityManagement">
+              <el-menu-item index="2-2"><i class="el-icon-files"></i>
+                活动管理
+              </el-menu-item>
+            </router-link>
+            <router-link to="/Clock">
+              <el-menu-item index="2-4"><i class="el-icon-alarm-clock"></i>
+                活动提醒
+              </el-menu-item>
+            </router-link>
           </el-submenu>
           <el-menu-item index="3">
             <i class="el-icon-map-location"></i>
@@ -59,7 +76,8 @@
             <span :class="collapseBtnClass" style="cursor: pointer" @click="collapse"></span>
           </div>
           <div style="flex: 1">
-            2022-{{m}}-{{d}}-{{h}}:00:00
+            {{time.getFullYear()}}-{{time.getMonth()}}-{{time.getDate()}}
+            {{time.getHours()}}:{{time.getMinutes()}}:{{time.getSeconds()}}
             <el-button @click="speedUp">快进</el-button>
           </div>
           <el-dropdown style="width: 70px; cursor: pointer">
@@ -83,6 +101,8 @@
 
 <script>
 
+import bus from "@/utils/bus";
+
 export default {
   name: 'Home',
   data() {
@@ -91,10 +111,8 @@ export default {
       isCollapse: false,
       sideWidth: 200,
       logoTextShow: true,
-      m: 6,
-      d: 1,
-      h: 14,
-      times:0
+      time: new Date(2022,6,1,0),
+      times: 0,
     }
   },
   mounted() {
@@ -120,35 +138,32 @@ export default {
         this.logoTextShow = true
       }
     },
-    countTime (times) {
+    countTime(times) {
       if (times != 10) {
         times++
         return times
       }
-      if(this.h < 23)
-        this.h++
-      else {
-        this.h = 0
-        if(this.d < 30)
-          this.d++
-        else{
-          this.d = 1
-          this.m++
-        }
-      }
       times = 0
+      this.speedUp()
       return times
     },
-    speedUp(){
-      this.times = 10
-    }
-  }
+    speedUp() {
+      let t = this.time.getTime()
+      t += 1000 * 3600
+      this.time = new Date(t)
+      this.busFun(this.time)
+    },
+    busFun(data) {
+      // 通过 $emit 来触发方法，参数1 是定义方法名，参数2 是你要发送的数据
+      bus.$emit('send', data)
+    },
+  },
 }
 </script>
 
 <style scoped>
-  a{
-    text-decoration: none; /* 去除默认的下划线 */
-    color: white;    /* 去除默认的颜色和点击后变化的颜色 */
-  }
+a {
+  text-decoration: none; /* 去除默认的下划线 */
+  color: white; /* 去除默认的颜色和点击后变化的颜色 */
+}
 </style>
