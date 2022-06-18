@@ -128,8 +128,7 @@ export default {
             alert("闹钟" + this.tableData[i].name + "响了")
           }
         } else if (this.tableData[i].type == 3) {
-          if (data.getHours() - 1 == this.tableData[i].time.rowTime.slice(0, 2) ||
-          (data.getHours() == this.tableData[i].time.rowTime.slice(0, 2) && data.getMinutes() == 0 && data.getSeconds() == 0)) {
+          if (data.getHours() - 1 == this.tableData[i].time.rowTime.slice(0, 2)) {
             alert("闹钟" + this.tableData[i].name + "响了")
           }
         }
