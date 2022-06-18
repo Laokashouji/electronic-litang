@@ -63,6 +63,7 @@
       {{ time.getFullYear() }}-{{ time.getMonth() + 1}}-{{ time.getDate() }}
       {{ time.getHours() }}:{{ time.getMinutes() }}:{{ time.getSeconds() }}
       <el-button @click="speedUp">快进</el-button>
+      <el-button @click="speedDown">回退</el-button>
     </div>
 
     <el-table :data="tableData" border stripe>
@@ -92,6 +93,7 @@ export default {
         type: '',
       },
       time: new Date(2022, 6, 1, 0),
+      times:0
     }
   },
   created() {
@@ -118,17 +120,25 @@ export default {
           let str1 = this.tableData[i].time.formatTime
           str1 = str1.replace(/-/g, "/");
           var d = new Date(str1);
-          console.log(Math.abs(d.getTime() - data.getTime()))
-          if (Math.abs(d.getTime() - data.getTime()) < 3600 * 1000) {
+          console.log(d.getTime() - data.getTime())
+          if (0 <= d.getTime() - data.getTime() && d.getTime() - data.getTime() < 3600 * 1000) {
             alert("闹钟" + this.tableData[i].name + "响了")
             this.tableData[i].type = 0
           }
+
         } else if (this.tableData[i].type == 2) {
-          if (data.getDay() == this.tableData[i].time.weekday % 8 && data.getHours() == this.tableData[i].time.rowTime.slice(0, 2)) {
+          if (data.getDay() == this.tableData[i].time.weekday % 7
+              && ((data.getHours() == this.tableData[i].time.rowTime.slice(0, 2)
+                  && data.getMinutes() >= this.tableData[i].time.rowTime.slice(2, 4)))
+              || ((data.getHours() > this.tableData[i].time.rowTime.slice(0, 2)
+                      && data.getMinutes() < this.tableData[i].time.rowTime.slice(2, 4)))) {
             alert("闹钟" + this.tableData[i].name + "响了")
           }
         } else if (this.tableData[i].type == 3) {
-          if (data.getHours() - 1 == this.tableData[i].time.rowTime.slice(0, 2)) {
+          if (((data.getHours() == this.tableData[i].time.rowTime.slice(0, 2)
+              && data.getMinutes() >= this.tableData[i].time.rowTime.slice(2, 4)))
+              || ((data.getHours() > this.tableData[i].time.rowTime.slice(0, 2)
+                  && data.getMinutes() < this.tableData[i].time.rowTime.slice(2, 4)))) {
             alert("闹钟" + this.tableData[i].name + "响了")
           }
         }
@@ -171,6 +181,9 @@ export default {
       this.time = new Date(t)
       this.react(this.time)
     },
+    speedDown(){
+
+    }
   }
 }
 </script>
