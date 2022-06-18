@@ -68,8 +68,8 @@ export default {
       if(_this.schoolSource == _this.schoolTarget) {
         axios.get('http://localhost:9090/Map/findByTime/'+_this.source+'/'+_this.target+"/"+_this.schoolTarget).then(function (resp) {
           console.log(resp.data)
-          _this.length = resp.data[0]
-          _this.path = resp.data[1]
+          _this.length1 = resp.data[0]
+          _this.path1 = resp.data[1]
         })
       }
       else {
@@ -90,8 +90,8 @@ export default {
       if(_this.schoolSource == _this.schoolTarget) {
         axios.get('http://localhost:9090/Map/findByVehicle/'+_this.source+'/'+_this.target+"/"+_this.schoolTarget).then(function (resp) {
           console.log(resp.data)
-          _this.length = resp.data[0]
-          _this.path = resp.data[1]
+          _this.length1 = resp.data[0]
+          _this.path1 = resp.data[1]
         })
       }
       else {

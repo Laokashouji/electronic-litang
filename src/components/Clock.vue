@@ -127,11 +127,13 @@ export default {
           }
 
         } else if (this.tableData[i].type == 2) {
+          console.log(data.getDay()  +" @ " + this.tableData[i].time.weekday % 7)
+          console.log(data.getHours()+" @ " + data.getMinutes())
           if (data.getDay() == this.tableData[i].time.weekday % 7
-              && ((data.getHours() == this.tableData[i].time.rowTime.slice(0, 2)
-                  && data.getMinutes() >= this.tableData[i].time.rowTime.slice(2, 4)))
-              || ((data.getHours() > this.tableData[i].time.rowTime.slice(0, 2)
-                      && data.getMinutes() < this.tableData[i].time.rowTime.slice(2, 4)))) {
+              && (data.getHours() == this.tableData[i].time.rowTime.slice(0, 2)
+                  && data.getMinutes() >= this.tableData[i].time.rowTime.slice(2, 4))
+              || (data.getHours() > this.tableData[i].time.rowTime.slice(0, 2)
+                      && data.getMinutes() < this.tableData[i].time.rowTime.slice(2, 4))){
             alert("闹钟" + this.tableData[i].name + "响了")
           }
         } else if (this.tableData[i].type == 3) {
@@ -182,7 +184,10 @@ export default {
       this.react(this.time)
     },
     speedDown(){
-
+      let t = this.time.getTime()
+      t -= 1000 * 3600
+      this.time = new Date(t)
+      this.react(this.time)
     }
   }
 }
