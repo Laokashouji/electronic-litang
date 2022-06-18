@@ -127,20 +127,24 @@ export default {
           }
 
         } else if (this.tableData[i].type == 2) {
-          console.log(data.getDay()  +" @ " + this.tableData[i].time.weekday % 7)
-          console.log(data.getHours()+" @ " + data.getMinutes())
+          /*console.log(data.getDay()  +" @ " + this.tableData[i].time.weekday % 7)
+          console.log(data.getHours()+" : " + data.getMinutes())
+          console.log(this.tableData[i].time.rowTime.slice(0, 2)+" : " + this.tableData[i].time.rowTime.slice(2, 4))
+          console.log((data.getHours() == this.tableData[i].time.rowTime.slice(0, 2)
+              && data.getMinutes() >= this.tableData[i].time.rowTime.slice(3, 5)))*/
+
           if (data.getDay() == this.tableData[i].time.weekday % 7
               && (data.getHours() == this.tableData[i].time.rowTime.slice(0, 2)
-                  && data.getMinutes() >= this.tableData[i].time.rowTime.slice(2, 4))
-              || (data.getHours() > this.tableData[i].time.rowTime.slice(0, 2)
-                      && data.getMinutes() < this.tableData[i].time.rowTime.slice(2, 4))){
+                  && data.getMinutes() >= this.tableData[i].time.rowTime.slice(3, 5))
+              || (data.getHours() - this.tableData[i].time.rowTime.slice(0, 2) == 1
+                      && data.getMinutes() < this.tableData[i].time.rowTime.slice(3, 5))){
             alert("闹钟" + this.tableData[i].name + "响了")
           }
         } else if (this.tableData[i].type == 3) {
           if (((data.getHours() == this.tableData[i].time.rowTime.slice(0, 2)
-              && data.getMinutes() >= this.tableData[i].time.rowTime.slice(2, 4)))
-              || ((data.getHours() > this.tableData[i].time.rowTime.slice(0, 2)
-                  && data.getMinutes() < this.tableData[i].time.rowTime.slice(2, 4)))) {
+              && data.getMinutes() >= this.tableData[i].time.rowTime.slice(3, 5)))
+              || ((data.getHours() - this.tableData[i].time.rowTime.slice(0, 2) == 1
+                  && data.getMinutes() < this.tableData[i].time.rowTime.slice(3, 5)))) {
             alert("闹钟" + this.tableData[i].name + "响了")
           }
         }
