@@ -1,5 +1,5 @@
 <template>
-  <h1>Welcome to 电子理塘管理系统</h1>
+  <h1>Welcome to 管理系统</h1>
 </template>
 
 <script>

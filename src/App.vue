@@ -57,10 +57,12 @@
               </el-menu-item>
             </router-link>
           </el-submenu>
+          <router-link to="/Map">
           <el-menu-item index="3">
             <i class="el-icon-map-location"></i>
             <span slot="title">课程导航</span>
           </el-menu-item>
+            </router-link>
           <el-submenu index="4" disabled>
             <template slot="title">
               <i class="el-icon-setting"></i>

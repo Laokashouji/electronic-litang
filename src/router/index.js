@@ -7,6 +7,7 @@ import CourseTable from "@/components/CourseTable";
 import ActivityManagement from "@/components/ActivityManagement";
 import FileManagement from "@/components/FileManagement";
 import Clock from "@/components/Clock";
+import Map from "@/components/Map";
 Vue.use(VueRouter)
 
 const routes = [
@@ -44,7 +45,12 @@ const routes = [
     path: '/Clock',
     name: 'Clock',
     component: Clock
-  }
+  },
+  {
+    path: '/Map',
+    name: 'Map',
+    component: Map
+  },
 ]
 
 const router = new VueRouter({
