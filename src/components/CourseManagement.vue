@@ -54,12 +54,13 @@
         </el-form-item>
         <el-form-item label="上课地点" prop="place">
           <el-select v-model="ruleForm.place" placeholder="请选择上课地点">
-            <el-option label="S105" value="S105"></el-option>
-            <el-option label="S205" value="S205"></el-option>
-            <el-option label="S305" value="S305"></el-option>
-            <el-option label="N105" value="N105"></el-option>
-            <el-option label="N205" value="N205"></el-option>
-            <el-option label="N305" value="N305"></el-option>
+            <el-option
+                v-for="(item,index) in options"
+                v-if="/^[A-Za-z]+$/.test(item.name) == false"
+                :key="index"
+                :label="item.name"
+                :value="item.name">
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="课程群" prop="groupNum">
@@ -79,25 +80,25 @@
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-form-item label="课程资料">
-              <span>{{ props.row.meterials}}</span>
+              <span>{{ props.row.meterials.empty == true ? "无" :  props.row.meterials.all}}</span>
             </el-form-item>
             <el-form-item label="当前进度">
               <span>{{ props.row.progress }}</span>
             </el-form-item>
             <el-form-item label="已交作业">
-              <span>{{ props.row.homeWorksFinished}}</span>
+              <span>{{ props.row.homeWorksFinished.empty == true ? "无" :  props.row.homeWorksFinished.all}}</span>
             </el-form-item>
             <el-form-item label="待交作业">
-              <span>{{ props.row.homeWorksToDo}}</span>
+              <span>{{ props.row.homeWorksToDo.empty == true ? "无" :  props.row.homeWorksToDo.all}}</span>
             </el-form-item>
             <el-form-item label="课程群">
               <span>{{ props.row.group }}</span>
             </el-form-item>
             <el-form-item label="考试时间">
-              <span>{{ props.row.examTime.formatTime+" "+props.row.examTime.startTime+"~"+props.row.examTime.endTime}}</span>
+              <span>{{ props.row.examTime.formatTime + " " + props.row.examTime.startTime + "~" + props.row.examTime.endTime }}</span>
             </el-form-item>
             <el-form-item label="考试地点">
-              <span>{{ props.row.examPlace == "" ? "无" : props.row.examPlace}}</span>
+              <span>{{ props.row.examPlace == "" ? "无" : props.row.examPlace }}</span>
             </el-form-item>
           </el-form>
         </template>
@@ -109,8 +110,9 @@
 
       <el-table-column label="操作" width="200" align="center">
         <template slot-scope="scope">
-          <el-button type="success" @click="edit(scope.row)">编辑 <i class="el-icon-edit"></i></el-button>
-<!--          <el-button type="danger">删除 <i class="el-icon-remove-outline"></i></el-button>-->
+          <!--          <el-button type="success" @click="edit(scope.row)">编辑 <i class="el-icon-edit"></i></el-button>-->
+          <el-button type="primary" icon="el-icon-edit" circle @click="edit(scope.row)"></el-button>
+          <el-button type="primary" icon="el-icon-upload" circle @click="upload(scope.row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -133,6 +135,7 @@ export default {
     return {
       tableData: [],
       sourceData: [],
+      options:[],
       collapseBtnClass: 'el-icon-s-fold',
       isCollapse: false,
       sideWidth: 200,
@@ -142,10 +145,10 @@ export default {
       dialogFormVisible: false,
       ruleForm: {
         name: '数据结构',
-        teacherName: '丁真珍珠',
+        teacherName: '张三',
         times: [{}],
         place: '',
-        groupNum: '114514789',
+        groupNum: '123456789'
       },
       rules: {
         name: [
@@ -171,6 +174,9 @@ export default {
       _this.totalNum = resp.data.length;
       _this.sourceData = resp.data;
       _this.handleCurrentChange(1);
+    })
+    axios.get('http://localhost:9090/Map/getPlace/').then(function (resp) {
+      _this.options = resp.data;
     })
   },
   methods: {
@@ -210,7 +216,7 @@ export default {
         if (valid) {
           axios.post('http://localhost:9090/CourseManagement/addCourse', _this.ruleForm)
               .then(function (resp) {
-                if(resp.data == "success") {
+                if (resp.data == "success") {
                   _this.dialogFormVisible = false
                   _this.findAll()
                   alert("添加成功")
@@ -237,8 +243,8 @@ export default {
         key: 'Mon'
       });
     },
-    loadTime(){
-      for(let i = 0; i < this.tableData.length; i++){
+    loadTime() {
+      for (let i = 0; i < this.tableData.length; i++) {
         let l = this.tableData[i].time.length
         for (let j = 0; j < l; j++) {
           let t = this.tableData[i].time[j];
@@ -246,14 +252,22 @@ export default {
         }
       }
     },
-    edit(row){
+    edit(row) {
       this.$router.push({
         path: "/CourseEdit",
-        query:{
+        query: {
           id: row.id,
         }
       })
-    }
+    },
+    upload(row){
+      this.$router.push({
+        path: "/FileManagement",
+        query: {
+          id: row.id,
+        }
+      })
+    },
   }
 }
 </script>
@@ -262,13 +276,11 @@ export default {
 .demo-table-expand {
   font-size: 0;
 }
-
 .demo-table-expand label {
   width: 90px;
   color: #99a9bf;
 }
-
-.demo-table-expand{
+.demo-table-expand .el-form-item {
   margin-right: 0;
   margin-bottom: 0;
   width: 50%;

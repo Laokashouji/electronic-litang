@@ -31,13 +31,13 @@
 
         <el-form-item label="活动地点" prop="place">
           <el-select v-model="ruleForm.place" placeholder="请选择活动地点">
-            <el-option label="教学楼" value="教学楼"></el-option>
-            <el-option label="宿舍" value="宿舍"></el-option>
-            <el-option label="二维码广场" value="二维码广场"></el-option>
-            <el-option label="图书馆" value="图书馆"></el-option>
-            <el-option label="操场" value="操场"></el-option>
-            <el-option label="食堂" value="食堂"></el-option>
-            <el-option label="校外" value="校外"></el-option>
+            <el-option
+                v-for="(item,index) in options"
+                v-if="/^[A-Za-z]+$/.test(item.name) == false"
+                :key="index"
+                :label="item.name"
+                :value="item.name">
+            </el-option>
           </el-select>
         </el-form-item>
 
@@ -135,6 +135,7 @@ export default {
       },
       ActivityName: "",
       ActivityTag: "",
+      options:[],
     }
   },
   created() {
@@ -143,6 +144,9 @@ export default {
       _this.totalNum = resp.data.length;
       _this.sourceData = resp.data;
       _this.handleCurrentChange(1);
+    })
+    axios.get('http://localhost:9090/Map/getPlace/').then(function (resp) {
+      _this.options = resp.data;
     })
   },
   methods: {

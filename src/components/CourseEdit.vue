@@ -9,7 +9,7 @@
     <el-form-item
         v-for="(time, index) in ruleForm.time"
         :label="'上课时间' + index"
-        :key="index"
+        :key="index + '-only'"
         :prop="'time.' + index + '.rowTime'"
         :rules="{required: true, message: '上课时间不能为空', trigger: 'blur'}">
       <el-select v-model="time.weekday" placeholder="请选择星期">
@@ -45,6 +45,16 @@
     <el-form-item label="当前进度" prop="progress">
       <el-input class="input-button" v-model="ruleForm.progress"></el-input>
     </el-form-item>
+
+    <el-form-item
+        v-for="(homework, index) in ruleForm.homeWorksToDo.all"
+        :label="'作业' + index"
+        :key="index"
+        :prop="'homeWorksToDo' + index">
+      <el-input class="input-button" v-model="ruleForm.homeWorksToDo.all[index]"></el-input>
+      <el-button @click.prevent="removeHomework(homework)">删除</el-button>
+    </el-form-item>
+
     <el-form-item label="考试时间" prop="examTime">
         <el-date-picker
             v-model="ruleForm.examTime.formatTime"
@@ -75,6 +85,7 @@
     <el-form-item>
       <el-button type="primary" @click="submitForm('ruleForm')">立即修改</el-button>
       <el-button @click="addTime">新增上课时间</el-button>
+      <el-button @click="addHomework">新增作业</el-button>
       <el-button @click="resetForm('ruleForm')">重置</el-button>
     </el-form-item>
   </el-form>
@@ -135,9 +146,9 @@ export default {
       this.$refs[formName].resetFields();
     },
     removeTime(item) {
-      const index = this.ruleForm.times.indexOf(item)
+      const index = this.ruleForm.time.indexOf(item)
       if (index !== -1) {
-        this.ruleForm.times.splice(index, 1)
+        this.ruleForm.time.splice(index, 1)
       }
     },
     addTime() {
@@ -145,6 +156,15 @@ export default {
         value: '',
         key: 'Mon'
       });
+    },
+    removeHomework(item){
+      const index = this.ruleForm.homeWorksToDo.all.indexOf(item)
+      if (index !== -1) {
+        this.ruleForm.homeWorksToDo.all.splice(index, 1)
+      }
+    },
+    addHomework() {
+      this.ruleForm.homeWorksToDo.all.push("");
     },
     loadTime() {
       for (let i = 0; i < this.tableData.length; i++) {

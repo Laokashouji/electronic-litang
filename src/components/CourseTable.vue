@@ -141,7 +141,7 @@ export default {
           break;
         const cTime = item.Course.split("~")
         if (flag == 0) {
-          if (cTime[0] == st) {
+          if (cTime[0] >= st) {
             flag = 1;
             _this.$set(_this.classList[i], weekday, name)
             continue
@@ -149,7 +149,7 @@ export default {
         }
         else if (flag == 1) {
           _this.$set(_this.classList[i], weekday, name)
-            if (cTime[1] == ed) {
+            if (cTime[1] >= ed) {
               flag = 2
               continue
             }
